@@ -1,533 +1,530 @@
 <!DOCTYPE html>
-<html class="h-full bg-slate-100" lang="en">
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>BugFlowBoard Pro — Secure & Real-time</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BugFlow Enterprise | Thendral Raj</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Tailwind CSS -->
-<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-<script>
-  tailwind.config = {
-    theme: {
-      extend: {
-        colors: {
-          sidebar: { bg: '#0f172a', card: '#1e293b', active: '#334155', hover: '#1e293b', text: '#94a3b8' },
-          brand: { 500: '#3b82f6', 600: '#2563eb' }
-        },
-        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] }
-      }
-    }
-  };
-</script>
-
-<!-- Fonts & Icons -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-<!-- SheetJS for Excel Export -->
-<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-
-<style>
-  body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-  .view { display: none; }
-  .view.active { display: block; animation: fadeUp .3s ease both; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-  
-  /* Custom Scrollbar */
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-  
-  /* Loader */
-  .loader { border: 3px solid #f3f3f3; border-top: 3px solid #3b82f6; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
-  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-</style>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f3f4f6; }
+        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
 </head>
+<body class="h-screen flex overflow-hidden text-slate-800">
 
-<body class="h-full overflow-hidden text-slate-800 bg-slate-50">
-
-<!-- ================= LOGIN SCREEN ================= -->
-<div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop')] bg-cover bg-center">
-  <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
-  
-  <div class="relative w-full max-w-md p-8 bg-white rounded-2xl shadow-2xl pop-in">
-    <div class="text-center mb-6">
-      <div class="inline-flex items-center justify-center w-12 h-12 mb-4 rounded-xl bg-blue-600 text-white shadow-lg shadow-blue-500/30">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-      </div>
-      <h2 class="text-2xl font-bold text-slate-800">BugFlowBoard Pro</h2>
-      <p class="text-sm text-slate-500 mt-1">Secure Enterprise Access</p>
-    </div>
-
-    <form id="login-form" class="space-y-4">
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Employee Name</label>
-        <input type="text" id="login-name" value="Thendral Raj" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Enter your name" required>
-      </div>
-      
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Company ID / Password</label>
-        <input type="password" id="login-pass" value="admin123" class="w-full px-4 py-2.5 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition" placeholder="Enter secure key" required>
-        <p class="text-[10px] text-slate-400 mt-1">Hint: Use 'admin123' for demo</p>
-      </div>
-
-      <button type="submit" class="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md shadow-blue-500/20 transition transform active:scale-95 flex justify-center items-center gap-2">
-        <span>Secure Login</span>
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-      </button>
-    </form>
-    
-    <div id="login-error" class="hidden mt-4 p-3 bg-red-50 text-red-600 text-xs rounded-lg text-center font-medium"></div>
-  </div>
-</div>
-
-<!-- ================= MAIN APP (Hidden initially) ================= -->
-<div id="app-container" class="hidden flex h-screen w-full overflow-hidden">
-
-  <!-- SIDEBAR -->
-  <aside class="w-64 bg-sidebar-bg text-white flex flex-col shadow-xl z-20 hidden lg:flex">
-    <div class="p-6 border-b border-slate-700/50">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center">
-          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-        </div>
-        <div>
-          <h1 class="font-bold text-sm tracking-wide">BugFlowBoard</h1>
-          <p class="text-[10px] text-slate-400">Enterprise Edition</p>
-        </div>
-      </div>
-    </div>
-
-    <nav class="flex-1 p-4 space-y-1 overflow-y-auto">
-      <a href="#" onclick="switchView('dashboard')" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-sidebar-hover hover:text-white transition group active-nav">
-        <svg class="w-5 h-5 group-hover:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
-        Dashboard
-      </a>
-      <a href="#" onclick="switchView('bugs')" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-sidebar-hover hover:text-white transition group">
-        <svg class="w-5 h-5 group-hover:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-        All Bugs
-      </a>
-      <a href="#" onclick="switchView('board')" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-slate-400 hover:bg-sidebar-hover hover:text-white transition group">
-        <svg class="w-5 h-5 group-hover:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path></svg>
-        Kanban Board
-      </a>
-    </nav>
-
-    <div class="p-4 border-t border-slate-700/50">
-      <div class="flex items-center gap-3 mb-4">
-        <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 flex items-center justify-center text-xs font-bold">TR</div>
-        <div class="overflow-hidden">
-          <p id="user-display-name" class="text-sm font-semibold truncate">Thendral Raj</p>
-          <p class="text-[10px] text-slate-400">Full Stack Dev</p>
-        </div>
-      </div>
-      <button onclick="logout()" class="w-full py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium rounded-lg transition flex items-center justify-center gap-2">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
-        Logout
-      </button>
-    </div>
-  </aside>
-
-  <!-- CONTENT AREA -->
-  <main class="flex-1 flex flex-col min-w-0 bg-slate-50 relative">
-    
-    <!-- Header -->
-    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shadow-sm z-10">
-      <div class="flex items-center gap-4">
-        <button class="lg:hidden text-slate-500"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
-        <h2 id="page-title" class="text-lg font-bold text-slate-800">Dashboard</h2>
-      </div>
-      
-      <div class="flex items-center gap-3">
-        <button onclick="exportToExcel()" class="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-lg text-xs font-semibold hover:bg-emerald-100 transition">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-          Export Excel
-        </button>
-        <button onclick="openModal()" class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition transform active:scale-95">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
-          New Bug
-        </button>
-      </div>
-    </header>
-
-    <!-- Views Container -->
-    <div class="flex-1 overflow-y-auto p-6 custom-scrollbar">
-      
-      <!-- DASHBOARD VIEW -->
-      <section id="view-dashboard" class="view active">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase">Total Bugs</p>
-                <h3 id="stat-total" class="text-3xl font-bold text-slate-800 mt-1">--</h3>
-              </div>
-              <span class="p-2 bg-blue-50 text-blue-600 rounded-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg></span>
+    <!-- ================= LOGIN SCREEN ================= -->
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80')] bg-cover bg-center">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
+        
+        <div class="relative w-full max-w-md p-8 bg-white rounded-2xl shadow-2xl border border-slate-200 fade-in">
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-blue-600 text-white shadow-lg shadow-blue-500/40">
+                    <i class="fa-solid fa-shield-halved text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">BugFlow Enterprise</h2>
+                <p class="text-sm text-slate-500 mt-2">Secure Project Management System</p>
             </div>
-          </div>
-          <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase">Critical Issues</p>
-                <h3 id="stat-critical" class="text-3xl font-bold text-rose-600 mt-1">--</h3>
-              </div>
-              <span class="p-2 bg-rose-50 text-rose-600 rounded-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></span>
-            </div>
-          </div>
-          <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100">
-            <div class="flex justify-between items-start">
-              <div>
-                <p class="text-xs font-semibold text-slate-400 uppercase">Resolved</p>
-                <h3 id="stat-done" class="text-3xl font-bold text-emerald-600 mt-1">--</h3>
-              </div>
-              <span class="p-2 bg-emerald-50 text-emerald-600 rounded-lg"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></span>
-            </div>
-          </div>
-        </div>
 
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-          <div class="px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-            <h3 class="font-bold text-slate-800">Recent Activity</h3>
-            <span class="text-xs text-slate-400">Live Updates</span>
-          </div>
-          <ul id="activity-list" class="divide-y divide-slate-100">
-            <!-- Items injected by JS -->
-            <li class="p-6 text-center text-slate-400 text-sm">Loading data from cloud...</li>
-          </ul>
-        </div>
-      </section>
+            <form id="login-form" class="space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Employee Name</label>
+                    <div class="relative">
+                        <i class="fa-regular fa-user absolute left-3 top-3.5 text-slate-400"></i>
+                        <input type="text" id="login-name" value="Thendral Raj" class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Access Key / Password</label>
+                    <div class="relative">
+                        <i class="fa-solid fa-key absolute left-3 top-3.5 text-slate-400"></i>
+                        <input type="password" id="login-pass" value="admin123" class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50" required>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mt-2 text-right">Hint: Use 'admin123'</p>
+                </div>
 
-      <!-- BUGS LIST VIEW -->
-      <section id="view-bugs" class="view">
-        <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
-          <table class="w-full text-left text-sm">
-            <thead class="bg-slate-50 text-slate-500 font-semibold border-b border-slate-200">
-              <tr>
-                <th class="px-6 py-4">Bug Title</th>
-                <th class="px-6 py-4">Priority</th>
-                <th class="px-6 py-4">Status</th>
-                <th class="px-6 py-4">Assignee</th>
-                <th class="px-6 py-4">Date</th>
-              </tr>
-            </thead>
-            <tbody id="bug-table-body" class="divide-y divide-slate-100">
-              <!-- Rows injected by JS -->
-            </tbody>
-          </table>
+                <button type="submit" class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex justify-center items-center gap-2">
+                    <span>Authenticate & Login</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+            
+            <div id="login-error" class="hidden mt-4 p-3 bg-red-50 text-red-600 text-xs rounded-lg text-center font-medium border border-red-100"></div>
         </div>
-      </section>
-
-      <!-- BOARD VIEW -->
-      <section id="view-board" class="view">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 h-full">
-          <!-- Columns -->
-          <div class="bg-slate-100 rounded-xl p-4 flex flex-col h-full">
-            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-slate-400"></span> Backlog</h4>
-            <div id="col-backlog" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar"></div>
-          </div>
-          <div class="bg-slate-100 rounded-xl p-4 flex flex-col h-full">
-            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span> In Progress</h4>
-            <div id="col-progress" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar"></div>
-          </div>
-          <div class="bg-slate-100 rounded-xl p-4 flex flex-col h-full">
-            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-500"></span> Review</h4>
-            <div id="col-review" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar"></div>
-          </div>
-          <div class="bg-slate-100 rounded-xl p-4 flex flex-col h-full">
-            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> Done</h4>
-            <div id="col-done" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar"></div>
-          </div>
-        </div>
-      </section>
-
     </div>
-  </main>
-</div>
 
-<!-- MODAL FOR NEW BUG -->
-<div id="bug-modal" class="fixed inset-0 z-50 hidden bg-slate-900/50 backdrop-blur-sm flex items-center justify-center">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-6 m-4 animate-[fadeUp_0.2s_ease-out]">
-    <div class="flex justify-between items-center mb-6">
-      <h3 class="text-xl font-bold text-slate-800">Report New Bug</h3>
-      <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
-    </div>
-    <form id="add-bug-form" class="space-y-4">
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Bug Title</label>
-        <input type="text" id="inp-title" required class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="e.g., Login API fails on 500">
-      </div>
-      <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Priority</label>
-          <select id="inp-priority" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-            <option value="Low">Low</option>
-            <option value="Medium" selected>Medium</option>
-            <option value="High">High</option>
-            <option value="Critical">Critical</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 mb-1">Assignee</label>
-          <select id="inp-assignee" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none">
-            <option value="Thendral Raj">Thendral Raj</option>
-            <option value="Arun Kumar">Arun Kumar</option>
-            <option value="Meera Sundar">Meera Sundar</option>
-          </select>
-        </div>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-600 mb-1">Description</label>
-        <textarea id="inp-desc" rows="3" class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Steps to reproduce..."></textarea>
-      </div>
-      <div class="pt-2 flex gap-3">
-        <button type="button" onclick="closeModal()" class="flex-1 py-2.5 border border-slate-300 text-slate-600 font-semibold rounded-lg hover:bg-slate-50">Cancel</button>
-        <button type="submit" class="flex-1 py-2.5 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-500/30">Save Bug</button>
-      </div>
-    </form>
-  </div>
-</div>
-
-<!-- FIREBASE SDKs (Modular) -->
-<script type="module">
-  // ---------------------------------------------------------
-  // 🔥 FIREBASE CONFIGURATION (YOU MUST REPLACE THIS!)
-  // ---------------------------------------------------------
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
-
-  // ⚠️ STEP 1: Go to console.firebase.google.com
-  // ⚠️ STEP 2: Create Project -> Add Web App -> Copy Config
-  // ⚠️ STEP 3: Replace the object below with YOUR config
-  const firebaseConfig = {
-    apiKey: "YOUR_API_KEY_HERE",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
-  };
-
-  // Initialize Firebase
-  let db;
-  try {
-    const app = initializeApp(firebaseConfig);
-    db = getFirestore(app);
-    console.log("Firebase Initialized");
-  } catch (e) {
-    console.error("Firebase Error: Did you replace the config?", e);
-    alert("Error: Please update the Firebase Config in the code to use Real Database.");
-  }
-
-  // Global State
-  window.bugsData = [];
-  window.currentUser = null;
-
-  // ---------------------------------------------------------
-  // AUTHENTICATION LOGIC
-  // ---------------------------------------------------------
-  const loginForm = document.getElementById('login-form');
-  
-  loginForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('login-name').value;
-    const pass = document.getElementById('login-pass').value;
-    const errorDiv = document.getElementById('login-error');
-
-    // Simple Demo Auth (In real app, use Firebase Auth)
-    if (pass === 'admin123') {
-      window.currentUser = name;
-      document.getElementById('user-display-name').textContent = name;
-      
-      // UI Transition
-      document.getElementById('login-screen').classList.add('hidden');
-      document.getElementById('app-container').classList.remove('hidden');
-      
-      // Start Real-time Listener
-      if(db) startRealtimeListener();
-      else alert("Database not connected. Check console.");
-    } else {
-      errorDiv.textContent = "Invalid Company ID or Password.";
-      errorDiv.classList.remove('hidden');
-    }
-  });
-
-  window.logout = () => {
-    location.reload();
-  };
-
-  // ---------------------------------------------------------
-  // REAL-TIME DATABASE LISTENER
-  // ---------------------------------------------------------
-  function startRealtimeListener() {
-    const q = query(collection(db, "bugs"), orderBy("createdAt", "desc"));
-    
-    onSnapshot(q, (snapshot) => {
-      window.bugsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      renderAll();
-    }, (error) => {
-      console.error("Data fetch error:", error);
-    });
-  }
-
-  // ---------------------------------------------------------
-  // ADD BUG TO FIREBASE
-  // ---------------------------------------------------------
-  document.getElementById('add-bug-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    if(!db) return alert("DB Not Connected");
-
-    const newBug = {
-      title: document.getElementById('inp-title').value,
-      priority: document.getElementById('inp-priority').value,
-      assignee: document.getElementById('inp-assignee').value,
-      description: document.getElementById('inp-desc').value,
-      status: 'Backlog',
-      createdAt: new Date().toISOString(),
-      createdBy: window.currentUser
-    };
-
-    try {
-      await addDoc(collection(db, "bugs"), newBug);
-      closeModal();
-      showToast("Bug added to Cloud Database!");
-      e.target.reset();
-    } catch (err) {
-      console.error(err);
-      alert("Failed to save: " + err.message);
-    }
-  });
-
-  // ---------------------------------------------------------
-  // RENDERING UI
-  // ---------------------------------------------------------
-  function renderAll() {
-    renderStats();
-    renderTable();
-    renderBoard();
-    renderActivity();
-  }
-
-  function renderStats() {
-    const total = window.bugsData.length;
-    const critical = window.bugsData.filter(b => b.priority === 'Critical').length;
-    const done = window.bugsData.filter(b => b.status === 'Done').length;
-
-    document.getElementById('stat-total').innerText = total;
-    document.getElementById('stat-critical').innerText = critical;
-    document.getElementById('stat-done').innerText = done;
-  }
-
-  function renderTable() {
-    const tbody = document.getElementById('bug-table-body');
-    tbody.innerHTML = window.bugsData.map(bug => {
-      const priorityColor = bug.priority === 'Critical' ? 'text-rose-600 bg-rose-50' : 
-                            bug.priority === 'High' ? 'text-orange-600 bg-orange-50' : 'text-blue-600 bg-blue-50';
-      
-      return `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="px-6 py-4 font-medium text-slate-800">${bug.title}</td>
-          <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-bold ${priorityColor}">${bug.priority}</span></td>
-          <td class="px-6 py-4 text-slate-500">${bug.status}</td>
-          <td class="px-6 py-4 text-slate-500">${bug.assignee}</td>
-          <td class="px-6 py-4 text-xs text-slate-400">${new Date(bug.createdAt).toLocaleDateString()}</td>
-        </tr>
-      `;
-    }).join('');
-  }
-
-  function renderBoard() {
-    const cols = { 'Backlog': [], 'In Progress': [], 'Review': [], 'Done': [] };
-    window.bugsData.forEach(b => {
-      if(cols[b.status]) cols[b.status].push(b);
-    });
-
-    Object.keys(cols).forEach(status => {
-      const container = document.getElementById(`col-${status.toLowerCase().replace(' ', '-')}`);
-      if(container) {
-        container.innerHTML = cols[status].map(bug => `
-          <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-200 cursor-pointer hover:shadow-md transition group relative">
-            <div class="flex justify-between items-start mb-2">
-              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 text-slate-500">${bug.priority}</span>
-              <button onclick="deleteBug('${bug.id}')" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition">×</button>
+    <!-- ================= MAIN APP ================= -->
+    <div id="app-container" class="hidden flex w-full h-full">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-64 bg-slate-900 text-white flex flex-col shadow-2xl z-20 hidden md:flex">
+            <div class="p-6 border-b border-slate-800 flex items-center gap-3">
+                <div class="w-8 h-8 rounded bg-blue-600 flex items-center justify-center">
+                    <i class="fa-solid fa-bug text-sm"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm tracking-wide">BugFlow Pro</h1>
+                    <p class="text-[10px] text-slate-400">v2.4.0 (Enterprise)</p>
+                </div>
             </div>
-            <h5 class="text-sm font-semibold text-slate-700 mb-1">${bug.title}</h5>
-            <p class="text-[10px] text-slate-400">Assigned to: ${bug.assignee}</p>
-          </div>
-        `).join('');
-      }
-    });
-  }
 
-  function renderActivity() {
-    const list = document.getElementById('activity-list');
-    const recent = window.bugsData.slice(0, 5);
-    
-    if(recent.length === 0) {
-      list.innerHTML = '<li class="p-6 text-center text-slate-400 text-sm">No bugs reported yet.</li>';
-      return;
-    }
+            <nav class="flex-1 p-4 space-y-2 overflow-y-auto">
+                <a href="#" onclick="switchView('dashboard')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition group bg-slate-800 text-white">
+                    <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-blue-400"></i> Dashboard
+                </a>
+                <a href="#" onclick="switchView('bugs')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-list-check w-5 text-center group-hover:text-blue-400"></i> All Bugs
+                </a>
+                <a href="#" onclick="switchView('board')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-columns w-5 text-center group-hover:text-blue-400"></i> Kanban Board
+                </a>
+            </nav>
 
-    list.innerHTML = recent.map(bug => `
-      <li class="px-6 py-4 flex items-center gap-4 hover:bg-slate-50 transition">
-        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">
-          ${bug.createdBy.charAt(0)}
+            <div class="p-4 border-t border-slate-800 bg-slate-950">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-xs font-bold shadow-lg">TR</div>
+                    <div class="overflow-hidden">
+                        <p id="user-display-name" class="text-sm font-semibold truncate text-white">Thendral Raj</p>
+                        <p class="text-[10px] text-slate-400">Senior Developer</p>
+                    </div>
+                </div>
+                <button onclick="logout()" class="w-full py-2 px-3 bg-slate-800 hover:bg-red-900/30 hover:text-red-400 text-slate-400 text-xs font-medium rounded-lg transition flex items-center justify-center gap-2 border border-slate-700 hover:border-red-800">
+                    <i class="fa-solid fa-power-off"></i> Logout Session
+                </button>
+            </div>
+        </aside>
+
+        <!-- CONTENT AREA -->
+        <main class="flex-1 flex flex-col min-w-0 bg-slate-50 relative overflow-hidden">
+            
+            <!-- Header -->
+            <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-8 shadow-sm z-10">
+                <div class="flex items-center gap-4">
+                    <h2 id="page-title" class="text-xl font-bold text-slate-800">Dashboard Overview</h2>
+                </div>
+                
+                <div class="flex items-center gap-3">
+                    <button onclick="exportToExcel()" class="hidden sm:flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition">
+                        <i class="fa-solid fa-file-excel"></i> Export Report
+                    </button>
+                    
+                    <!-- ONLY ADMIN CAN SEE THIS BUTTON -->
+                    <button id="btn-add-bug" onclick="openModal()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition transform active:scale-95">
+                        <i class="fa-solid fa-plus"></i> New Bug
+                    </button>
+                </div>
+            </header>
+
+            <!-- Views Container -->
+            <div class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+                
+                <!-- DASHBOARD VIEW -->
+                <section id="view-dashboard" class="view active fade-in">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Bugs</p>
+                                    <h3 id="stat-total" class="text-4xl font-black text-slate-800 mt-2">--</h3>
+                                </div>
+                                <span class="p-3 bg-blue-50 text-blue-600 rounded-xl"><i class="fa-solid fa-layer-group text-xl"></i></span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Critical Issues</p>
+                                    <h3 id="stat-critical" class="text-4xl font-black text-rose-600 mt-2">--</h3>
+                                </div>
+                                <span class="p-3 bg-rose-50 text-rose-600 rounded-xl"><i class="fa-solid fa-triangle-exclamation text-xl"></i></span>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Resolved</p>
+                                    <h3 id="stat-done" class="text-4xl font-black text-emerald-600 mt-2">--</h3>
+                                </div>
+                                <span class="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><i class="fa-solid fa-circle-check text-xl"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                        <div class="px-8 py-5 border-b border-slate-100 flex justify-between items-center bg-slate-50/50">
+                            <h3 class="font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-clock-rotate-left text-slate-400"></i> Recent Activity Log</h3>
+                            <span class="text-xs font-mono text-slate-400 bg-slate-100 px-2 py-1 rounded">LIVE SYNC</span>
+                        </div>
+                        <ul id="activity-list" class="divide-y divide-slate-100">
+                            <li class="p-8 text-center text-slate-400 text-sm"><i class="fa-solid fa-spinner fa-spin mr-2"></i> Syncing with cloud database...</li>
+                        </ul>
+                    </div>
+                </section>
+
+                <!-- BUGS LIST VIEW -->
+                <section id="view-bugs" class="view hidden fade-in">
+                    <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 uppercase text-xs tracking-wider">
+                                <tr>
+                                    <th class="px-8 py-4">Bug Title</th>
+                                    <th class="px-6 py-4">Priority</th>
+                                    <th class="px-6 py-4">Status</th>
+                                    <th class="px-6 py-4">Assignee</th>
+                                    <th class="px-6 py-4">Reported Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bug-table-body" class="divide-y divide-slate-100">
+                                <!-- Rows injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- BOARD VIEW -->
+                <section id="view-board" class="view hidden fade-in h-full">
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 h-full pb-10">
+                        <!-- Columns -->
+                        <div class="bg-slate-100/80 rounded-xl p-4 flex flex-col h-full border border-slate-200">
+                            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide"><span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> Backlog</h4>
+                            <div id="col-backlog" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1"></div>
+                        </div>
+                        <div class="bg-slate-100/80 rounded-xl p-4 flex flex-col h-full border border-slate-200">
+                            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> In Progress</h4>
+                            <div id="col-progress" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1"></div>
+                        </div>
+                        <div class="bg-slate-100/80 rounded-xl p-4 flex flex-col h-full border border-slate-200">
+                            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Review</h4>
+                            <div id="col-review" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1"></div>
+                        </div>
+                        <div class="bg-slate-100/80 rounded-xl p-4 flex flex-col h-full border border-slate-200">
+                            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Done</h4>
+                            <div id="col-done" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1"></div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL FOR NEW BUG -->
+    <div id="bug-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-0 m-4 animate-[fadeIn_0.2s_ease-out] border border-slate-200 overflow-hidden">
+            <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-bug text-blue-600"></i> Report New Issue</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            </div>
+            
+            <form id="add-bug-form" class="p-6 space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Issue Title *</label>
+                    <input type="text" id="inp-title" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50" placeholder="e.g., Payment Gateway Timeout on Checkout">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Priority Level</label>
+                        <select id="inp-priority" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50">
+                            <option value="Low">Low Priority</option>
+                            <option value="Medium" selected>Medium Priority</option>
+                            <option value="High">High Priority</option>
+                            <option value="Critical">Critical / Blocker</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Assign To</label>
+                        <select id="inp-assignee" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50">
+                            <option value="Thendral Raj">Thendral Raj (Me)</option>
+                            <option value="Arun Kumar">Arun Kumar</option>
+                            <option value="Meera Sundar">Meera Sundar</option>
+                            <option value="Priya Venkat">Priya Venkat</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Description</label>
+                    <textarea id="inp-desc" rows="3" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50" placeholder="Describe the issue steps..."></textarea>
+                </div>
+
+                <div class="pt-2 flex gap-3">
+                    <button type="button" onclick="closeModal()" class="flex-1 py-3 border border-slate-300 text-slate-600 font-bold rounded-lg hover:bg-slate-50 transition">Cancel</button>
+                    <button type="submit" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition flex justify-center items-center gap-2">
+                        <i class="fa-solid fa-save"></i> Save to Database
+                    </button>
+                </div>
+            </form>
         </div>
-        <div class="flex-1">
-          <p class="text-sm font-medium text-slate-800">${bug.title}</p>
-          <p class="text-xs text-slate-400">Reported by ${bug.createdBy} • ${new Date(bug.createdAt).toLocaleTimeString()}</p>
-        </div>
-        <span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2 py-1 rounded">${bug.status}</span>
-      </li>
-    `).join('');
-  }
+    </div>
 
-  // ---------------------------------------------------------
-  // UTILS & EXPORT
-  // ---------------------------------------------------------
-  window.deleteBug = async (id) => {
-    if(confirm("Delete this bug from Cloud?")) {
-      try {
-        await deleteDoc(doc(db, "bugs", id));
-        showToast("Bug deleted");
-      } catch(e) { console.error(e); }
-    }
-  };
+    <!-- FIREBASE SDKs (Modular) -->
+    <script type="module">
+        // ---------------------------------------------------------
+        // 🔥 FIREBASE CONFIGURATION (REPLACE WITH YOUR KEYS)
+        // ---------------------------------------------------------
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-  window.exportToExcel = () => {
-    if(window.bugsData.length === 0) return alert("No data to export");
-    
-    // Prepare data for Excel
-    const data = window.bugsData.map(b => ({
-      "Bug Title": b.title,
-      "Priority": b.priority,
-      "Status": b.status,
-      "Assignee": b.assignee,
-      "Reported By": b.createdBy,
-      "Date": new Date(b.createdAt).toLocaleDateString()
-    }));
+        // ️ STEP: Paste your Firebase Config here
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY_HERE",
+            authDomain: "YOUR_PROJECT.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT.appspot.com",
+            messagingSenderId: "SENDER_ID",
+            appId: "APP_ID"
+        };
 
-    const ws = XLSX.utils.json_to_sheet(data);
-    const wb = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(wb, ws, "Bugs Report");
-    XLSX.writeFile(wb, `BugFlow_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
-  };
+        let db;
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+        } catch (e) {
+            console.error("Firebase Config Missing or Invalid");
+        }
 
-  // UI Helpers
-  window.switchView = (viewName) => {
-    document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
-    document.getElementById(`view-${viewName}`).classList.add('active');
-    document.getElementById('page-title').innerText = viewName.charAt(0).toUpperCase() + viewName.slice(1);
-  };
+        // Global State
+        window.bugsData = [];
+        window.currentUser = null;
 
-  window.openModal = () => document.getElementById('bug-modal').classList.remove('hidden');
-  window.closeModal = () => document.getElementById('bug-modal').classList.add('hidden');
-  
-  function showToast(msg) {
-    const div = document.createElement('div');
-    div.className = "fixed bottom-5 right-5 bg-slate-800 text-white px-4 py-2 rounded-lg shadow-lg text-sm font-medium z-50 animate-[fadeUp_0.3s_ease]";
-    div.innerText = msg;
-    document.body.appendChild(div);
-    setTimeout(() => div.remove(), 3000);
-  }
+        // ---------------------------------------------------------
+        // AUTHENTICATION LOGIC
+        // ---------------------------------------------------------
+        const loginForm = document.getElementById('login-form');
+        
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = document.getElementById('login-name').value;
+            const pass = document.getElementById('login-pass').value;
+            const errorDiv = document.getElementById('login-error');
 
-</script>
+            // Simple Demo Auth
+            if (pass === 'admin123') {
+                window.currentUser = name;
+                document.getElementById('user-display-name').innerText = name;
+                
+                // Show App, Hide Login
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app-container').classList.remove('hidden');
+                document.getElementById('app-container').classList.add('flex');
+                
+                // Start Real-time Listener
+                if(db) startRealtimeListener();
+                else alert("Database not connected. Please check API Keys in code.");
+            } else {
+                errorDiv.innerText = "Invalid Access Key. Contact Admin.";
+                errorDiv.classList.remove('hidden');
+            }
+        });
+
+        window.logout = () => location.reload();
+
+        // ---------------------------------------------------------
+        // REAL-TIME DATABASE LISTENER
+        // ---------------------------------------------------------
+        function startRealtimeListener() {
+            const q = query(collection(db, "bugs"), orderBy("createdAt", "desc"));
+            
+            onSnapshot(q, (snapshot) => {
+                window.bugsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAll();
+            }, (error) => console.error("Data fetch error:", error));
+        }
+
+        // ---------------------------------------------------------
+        // ADD BUG TO FIREBASE
+        // ---------------------------------------------------------
+        document.getElementById('add-bug-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(!db) return alert("DB Not Connected");
+
+            const newBug = {
+                title: document.getElementById('inp-title').value,
+                priority: document.getElementById('inp-priority').value,
+                assignee: document.getElementById('inp-assignee').value,
+                description: document.getElementById('inp-desc').value,
+                status: 'Backlog',
+                createdAt: new Date().toISOString(),
+                createdBy: window.currentUser
+            };
+
+            try {
+                await addDoc(collection(db, "bugs"), newBug);
+                closeModal();
+                showToast("✅ Bug saved successfully to Cloud!");
+                e.target.reset();
+            } catch (err) {
+                alert("Failed to save: " + err.message);
+            }
+        });
+
+        // ---------------------------------------------------------
+        // RENDERING UI
+        // ---------------------------------------------------------
+        function renderAll() {
+            renderStats();
+            renderTable();
+            renderBoard();
+            renderActivity();
+        }
+
+        function renderStats() {
+            const total = window.bugsData.length;
+            const critical = window.bugsData.filter(b => b.priority === 'Critical').length;
+            const done = window.bugsData.filter(b => b.status === 'Done').length;
+
+            document.getElementById('stat-total').innerText = total;
+            document.getElementById('stat-critical').innerText = critical;
+            document.getElementById('stat-done').innerText = done;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('bug-table-body');
+            tbody.innerHTML = window.bugsData.map(bug => {
+                const priorityColor = bug.priority === 'Critical' ? 'text-rose-700 bg-rose-100' : 
+                                      bug.priority === 'High' ? 'text-orange-700 bg-orange-100' : 
+                                      bug.priority === 'Medium' ? 'text-blue-700 bg-blue-100' : 'text-slate-600 bg-slate-100';
+                
+                const statusColor = bug.status === 'Done' ? 'text-emerald-700 bg-emerald-100' : 'text-slate-600 bg-slate-100';
+
+                return `
+                    <tr class="hover:bg-slate-50 transition border-b border-slate-50 last:border-0">
+                        <td class="px-8 py-4 font-semibold text-slate-800">${bug.title}</td>
+                        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${priorityColor}">${bug.priority}</span></td>
+                        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${statusColor}">${bug.status}</span></td>
+                        <td class="px-6 py-4 text-slate-600 flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">${bug.assignee.charAt(0)}</div>
+                            ${bug.assignee}
+                        </td>
+                        <td class="px-6 py-4 text-xs text-slate-400 font-mono">${new Date(bug.createdAt).toLocaleDateString()}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderBoard() {
+            const cols = { 'Backlog': [], 'In Progress': [], 'Review': [], 'Done': [] };
+            window.bugsData.forEach(b => { if(cols[b.status]) cols[b.status].push(b); });
+
+            Object.keys(cols).forEach(status => {
+                const container = document.getElementById(`col-${status.toLowerCase().replace(' ', '-')}`);
+                if(container) {
+                    container.innerHTML = cols[status].map(bug => `
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-blue-300 transition group relative">
+                            <div class="flex justify-between items-start mb-3">
+                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-wide">${bug.priority}</span>
+                                ${window.currentUser === 'Thendral Raj' ? `<button onclick="deleteBug('${bug.id}')" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash-can"></i></button>` : ''}
+                            </div>
+                            <h5 class="text-sm font-bold text-slate-800 mb-2 leading-snug">${bug.title}</h5>
+                            <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-50">
+                                <p class="text-[10px] text-slate-400 font-medium">Assigned: ${bug.assignee}</p>
+                                <p class="text-[10px] text-slate-300 font-mono">${new Date(bug.createdAt).toLocaleDateString()}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            });
+        }
+
+        function renderActivity() {
+            const list = document.getElementById('activity-list');
+            const recent = window.bugsData.slice(0, 6);
+            
+            if(recent.length === 0) {
+                list.innerHTML = '<li class="p-8 text-center text-slate-400 text-sm">No activity recorded yet.</li>';
+                return;
+            }
+
+            list.innerHTML = recent.map(bug => `
+                <li class="px-8 py-4 flex items-center gap-4 hover:bg-slate-50 transition">
+                    <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm font-bold border border-blue-100">
+                        ${bug.createdBy.charAt(0)}
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-bold text-slate-800">${bug.title}</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Reported by <span class="text-slate-600 font-medium">${bug.createdBy}</span> • ${new Date(bug.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                    </div>
+                    <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">${bug.status}</span>
+                </li>
+            `).join('');
+        }
+
+        // ---------------------------------------------------------
+        // UTILS & EXPORT
+        // ---------------------------------------------------------
+        window.deleteBug = async (id) => {
+            if(confirm("Are you sure you want to permanently delete this bug?")) {
+                try {
+                    await deleteDoc(doc(db, "bugs", id));
+                    showToast("🗑️ Bug deleted from Cloud");
+                } catch(e) { console.error(e); }
+            }
+        };
+
+        window.exportToExcel = () => {
+            if(window.bugsData.length === 0) return alert("No data available to export.");
+            
+            const data = window.bugsData.map(b => ({
+                "Bug Title": b.title,
+                "Priority": b.priority,
+                "Current Status": b.status,
+                "Assigned To": b.assignee,
+                "Reported By": b.createdBy,
+                "Date Created": new Date(b.createdAt).toLocaleDateString()
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Bug_Report");
+            XLSX.writeFile(wb, `BugFlow_Enterprise_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
+        };
+
+        // UI Helpers
+        window.switchView = (viewName) => {
+            document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+            
+            // Update Active Nav
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('bg-slate-800', 'text-white');
+                el.classList.add('text-slate-400');
+            });
+            // Simple logic to highlight current nav (optional improvement)
+            
+            const titles = { 'dashboard': 'Dashboard Overview', 'bugs': 'All Reported Bugs', 'board': 'Kanban Workflow' };
+            document.getElementById('page-title').innerText = titles[viewName];
+        };
+
+        window.openModal = () => {
+            document.getElementById('bug-modal').classList.remove('hidden');
+            document.getElementById('inp-title').focus();
+        };
+        window.closeModal = () => document.getElementById('bug-modal').classList.add('hidden');
+        
+        function showToast(msg) {
+            const div = document.createElement('div');
+            div.className = "fixed bottom-6 right-6 bg-slate-800 text-white px-5 py-3 rounded-lg shadow-xl text-sm font-bold z-50 animate-[fadeIn_0.3s_ease] border border-slate-700 flex items-center gap-2";
+            div.innerHTML = msg;
+            document.body.appendChild(div);
+            setTimeout(() => div.remove(), 3000);
+        }
+
+    </script>
 </body>
 </html>
