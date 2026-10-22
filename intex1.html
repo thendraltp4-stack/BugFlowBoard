@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BugFlow Enterprise | Thendral Raj</title>
+    <title>BugFlow Enterprise | Secure Portal</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f3f4f6; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f8fafc; }
         .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .fade-in { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -27,7 +27,7 @@
 </head>
 <body class="h-screen flex overflow-hidden text-slate-800">
 
-    <!-- ================= LOGIN SCREEN ================= -->
+    <!-- ================= LOGIN SCREEN (OTP BASED) ================= -->
     <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900 bg-[url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80')] bg-cover bg-center">
         <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm"></div>
         
@@ -37,32 +37,37 @@
                     <i class="fa-solid fa-shield-halved text-2xl"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-slate-800 tracking-tight">BugFlow Enterprise</h2>
-                <p class="text-sm text-slate-500 mt-2">Secure Project Management System</p>
+                <p class="text-sm text-slate-500 mt-2">Secure OTP Authentication</p>
             </div>
 
-            <form id="login-form" class="space-y-5">
+            <!-- Step 1: Phone Number -->
+            <div id="step-phone" class="space-y-5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Employee Name</label>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Mobile Number</label>
                     <div class="relative">
-                        <i class="fa-regular fa-user absolute left-3 top-3.5 text-slate-400"></i>
-                        <input type="text" id="login-name" value="Thendral Raj" class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50" required>
+                        <span class="absolute left-3 top-3.5 text-slate-500 font-bold">+91</span>
+                        <input type="tel" id="inp-phone" value="9876543210" class="w-full pl-12 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50" placeholder="Enter 10 digit number">
                     </div>
                 </div>
-                
-                <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Access Key / Password</label>
-                    <div class="relative">
-                        <i class="fa-solid fa-key absolute left-3 top-3.5 text-slate-400"></i>
-                        <input type="password" id="login-pass" value="admin123" class="w-full pl-10 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50" required>
-                    </div>
-                    <p class="text-[10px] text-slate-400 mt-2 text-right">Hint: Use 'admin123'</p>
-                </div>
-
-                <button type="submit" class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex justify-center items-center gap-2">
-                    <span>Authenticate & Login</span>
-                    <i class="fa-solid fa-arrow-right"></i>
+                <button onclick="sendOTP()" class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg transition flex justify-center items-center gap-2">
+                    <span>Send OTP</span>
+                    <i class="fa-solid fa-paper-plane"></i>
                 </button>
-            </form>
+            </div>
+
+            <!-- Step 2: OTP Verification -->
+            <div id="step-otp" class="hidden space-y-5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Enter OTP</label>
+                    <input type="text" id="inp-otp" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 text-center tracking-[0.5em] font-mono text-xl" placeholder="------">
+                    <p class="text-[10px] text-slate-400 mt-2 text-center">Demo OTP: <b>123456</b></p>
+                </div>
+                <button onclick="verifyOTP()" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-lg transition flex justify-center items-center gap-2">
+                    <span>Verify & Login</span>
+                    <i class="fa-solid fa-check"></i>
+                </button>
+                <button onclick="backToPhone()" class="w-full py-2 text-xs text-slate-500 hover:text-blue-600">Change Number</button>
+            </div>
             
             <div id="login-error" class="hidden mt-4 p-3 bg-red-50 text-red-600 text-xs rounded-lg text-center font-medium border border-red-100"></div>
         </div>
@@ -79,7 +84,7 @@
                 </div>
                 <div>
                     <h1 class="font-bold text-sm tracking-wide">BugFlow Pro</h1>
-                    <p class="text-[10px] text-slate-400">v2.4.0 (Enterprise)</p>
+                    <p class="text-[10px] text-slate-400">Enterprise Edition</p>
                 </div>
             </div>
 
@@ -87,20 +92,17 @@
                 <a href="#" onclick="switchView('dashboard')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition group bg-slate-800 text-white">
                     <i class="fa-solid fa-chart-pie w-5 text-center group-hover:text-blue-400"></i> Dashboard
                 </a>
-                <a href="#" onclick="switchView('bugs')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition group">
-                    <i class="fa-solid fa-list-check w-5 text-center group-hover:text-blue-400"></i> All Bugs
-                </a>
-                <a href="#" onclick="switchView('board')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition group">
-                    <i class="fa-solid fa-columns w-5 text-center group-hover:text-blue-400"></i> Kanban Board
+                <a href="#" onclick="switchView('projects')" class="nav-item flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition group">
+                    <i class="fa-solid fa-folder-open w-5 text-center group-hover:text-blue-400"></i> Projects / Bugs
                 </a>
             </nav>
 
             <div class="p-4 border-t border-slate-800 bg-slate-950">
                 <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-xs font-bold shadow-lg">TR</div>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-600 flex items-center justify-center text-xs font-bold shadow-lg" id="user-avatar">TR</div>
                     <div class="overflow-hidden">
-                        <p id="user-display-name" class="text-sm font-semibold truncate text-white">Thendral Raj</p>
-                        <p class="text-[10px] text-slate-400">Senior Developer</p>
+                        <p id="user-display-name" class="text-sm font-semibold truncate text-white">Loading...</p>
+                        <p id="user-role" class="text-[10px] text-slate-400">Employee</p>
                     </div>
                 </div>
                 <button onclick="logout()" class="w-full py-2 px-3 bg-slate-800 hover:bg-red-900/30 hover:text-red-400 text-slate-400 text-xs font-medium rounded-lg transition flex items-center justify-center gap-2 border border-slate-700 hover:border-red-800">
@@ -119,13 +121,14 @@
                 </div>
                 
                 <div class="flex items-center gap-3">
-                    <button onclick="exportToExcel()" class="hidden sm:flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition">
+                    <!-- Admin Only Button -->
+                    <button id="btn-export" onclick="exportToExcel()" class="hidden sm:flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition">
                         <i class="fa-solid fa-file-excel"></i> Export Report
                     </button>
                     
-                    <!-- ONLY ADMIN CAN SEE THIS BUTTON -->
-                    <button id="btn-add-bug" onclick="openModal()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition transform active:scale-95">
-                        <i class="fa-solid fa-plus"></i> New Bug
+                    <!-- Add Button (Visible to all, but logic differs) -->
+                    <button id="btn-add" onclick="openModal()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition transform active:scale-95">
+                        <i class="fa-solid fa-plus"></i> New Entry
                     </button>
                 </div>
             </header>
@@ -139,7 +142,7 @@
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Bugs</p>
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Entries</p>
                                     <h3 id="stat-total" class="text-4xl font-black text-slate-800 mt-2">--</h3>
                                 </div>
                                 <span class="p-3 bg-blue-50 text-blue-600 rounded-xl"><i class="fa-solid fa-layer-group text-xl"></i></span>
@@ -157,7 +160,7 @@
                         <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md transition">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Resolved</p>
+                                    <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Completed</p>
                                     <h3 id="stat-done" class="text-4xl font-black text-emerald-600 mt-2">--</h3>
                                 </div>
                                 <span class="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><i class="fa-solid fa-circle-check text-xl"></i></span>
@@ -176,17 +179,18 @@
                     </div>
                 </section>
 
-                <!-- BUGS LIST VIEW -->
-                <section id="view-bugs" class="view hidden fade-in">
+                <!-- PROJECTS / BUGS LIST VIEW -->
+                <section id="view-projects" class="view hidden fade-in">
                     <div class="bg-white rounded-xl shadow-sm border border-slate-100 overflow-hidden">
                         <table class="w-full text-left text-sm">
                             <thead class="bg-slate-50 text-slate-500 font-bold border-b border-slate-200 uppercase text-xs tracking-wider">
                                 <tr>
-                                    <th class="px-8 py-4">Bug Title</th>
+                                    <th class="px-8 py-4">Title / Project Name</th>
                                     <th class="px-6 py-4">Priority</th>
                                     <th class="px-6 py-4">Status</th>
-                                    <th class="px-6 py-4">Assignee</th>
-                                    <th class="px-6 py-4">Reported Date</th>
+                                    <th class="px-6 py-4">Uploaded By</th>
+                                    <th class="px-6 py-4">Date</th>
+                                    <th class="px-6 py-4 text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="bug-table-body" class="divide-y divide-slate-100">
@@ -196,45 +200,22 @@
                     </div>
                 </section>
 
-                <!-- BOARD VIEW -->
-                <section id="view-board" class="view hidden fade-in h-full">
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 h-full pb-10">
-                        <!-- Columns -->
-                        <div class="bg-slate-100/80 rounded-xl p-4 flex flex-col h-full border border-slate-200">
-                            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide"><span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> Backlog</h4>
-                            <div id="col-backlog" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1"></div>
-                        </div>
-                        <div class="bg-slate-100/80 rounded-xl p-4 flex flex-col h-full border border-slate-200">
-                            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide"><span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> In Progress</h4>
-                            <div id="col-progress" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1"></div>
-                        </div>
-                        <div class="bg-slate-100/80 rounded-xl p-4 flex flex-col h-full border border-slate-200">
-                            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide"><span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Review</h4>
-                            <div id="col-review" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1"></div>
-                        </div>
-                        <div class="bg-slate-100/80 rounded-xl p-4 flex flex-col h-full border border-slate-200">
-                            <h4 class="font-bold text-slate-700 mb-4 flex items-center gap-2 text-sm uppercase tracking-wide"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Done</h4>
-                            <div id="col-done" class="space-y-3 flex-1 overflow-y-auto custom-scrollbar pr-1"></div>
-                        </div>
-                    </div>
-                </section>
-
             </div>
         </main>
     </div>
 
-    <!-- MODAL FOR NEW BUG -->
-    <div id="bug-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center">
+    <!-- MODAL FOR NEW ENTRY -->
+    <div id="entry-modal" class="fixed inset-0 z-50 hidden bg-slate-900/60 backdrop-blur-sm flex items-center justify-center">
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-0 m-4 animate-[fadeIn_0.2s_ease-out] border border-slate-200 overflow-hidden">
             <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
-                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-bug text-blue-600"></i> Report New Issue</h3>
+                <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-pen-to-square text-blue-600"></i> New Entry</h3>
                 <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             
-            <form id="add-bug-form" class="p-6 space-y-5">
+            <form id="add-form" class="p-6 space-y-5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Issue Title *</label>
-                    <input type="text" id="inp-title" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition bg-slate-50" placeholder="e.g., Payment Gateway Timeout on Checkout">
+                    <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Title / Project Name *</label>
+                    <input type="text" id="inp-title" required class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50" placeholder="e.g., Payment Gateway Integration">
                 </div>
                 
                 <div class="grid grid-cols-2 gap-5">
@@ -248,25 +229,25 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Assign To</label>
-                        <select id="inp-assignee" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50">
-                            <option value="Thendral Raj">Thendral Raj (Me)</option>
-                            <option value="Arun Kumar">Arun Kumar</option>
-                            <option value="Meera Sundar">Meera Sundar</option>
-                            <option value="Priya Venkat">Priya Venkat</option>
+                        <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Current Status</label>
+                        <select id="inp-status" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none bg-slate-50">
+                            <option value="Backlog">Backlog</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Review">Review</option>
+                            <option value="Done">Done</option>
                         </select>
                     </div>
                 </div>
 
                 <div>
                     <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2">Description</label>
-                    <textarea id="inp-desc" rows="3" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50" placeholder="Describe the issue steps..."></textarea>
+                    <textarea id="inp-desc" rows="3" class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50" placeholder="Describe the details..."></textarea>
                 </div>
 
                 <div class="pt-2 flex gap-3">
                     <button type="button" onclick="closeModal()" class="flex-1 py-3 border border-slate-300 text-slate-600 font-bold rounded-lg hover:bg-slate-50 transition">Cancel</button>
                     <button type="submit" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition flex justify-center items-center gap-2">
-                        <i class="fa-solid fa-save"></i> Save to Database
+                        <i class="fa-solid fa-save"></i> Save to Cloud
                     </button>
                 </div>
             </form>
@@ -279,9 +260,9 @@
         // 🔥 FIREBASE CONFIGURATION (REPLACE WITH YOUR KEYS)
         // ---------------------------------------------------------
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // ️ STEP: Paste your Firebase Config here
+        // ⚠️ STEP: Paste your Firebase Config here
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY_HERE",
             authDomain: "YOUR_PROJECT.firebaseapp.com",
@@ -296,42 +277,76 @@
             const app = initializeApp(firebaseConfig);
             db = getFirestore(app);
         } catch (e) {
-            console.error("Firebase Config Missing or Invalid");
+            console.error("Firebase Config Missing");
         }
 
         // Global State
         window.bugsData = [];
-        window.currentUser = null;
+        window.currentUser = null; // { name: "Thendral Raj", phone: "9876543210", role: "admin" }
 
         // ---------------------------------------------------------
-        // AUTHENTICATION LOGIC
+        // AUTHENTICATION LOGIC (OTP SIMULATION)
         // ---------------------------------------------------------
-        const loginForm = document.getElementById('login-form');
-        
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('login-name').value;
-            const pass = document.getElementById('login-pass').value;
-            const errorDiv = document.getElementById('login-error');
+        function sendOTP() {
+            const phone = document.getElementById('inp-phone').value;
+            if(phone.length < 10) return alert("Please enter valid number");
+            
+            // In real app, call Firebase Auth signInWithPhoneNumber here
+            document.getElementById('step-phone').classList.add('hidden');
+            document.getElementById('step-otp').classList.remove('hidden');
+            showToast(`📱 OTP sent to +91 ${phone}`);
+        }
 
-            // Simple Demo Auth
-            if (pass === 'admin123') {
-                window.currentUser = name;
-                document.getElementById('user-display-name').innerText = name;
+        function backToPhone() {
+            document.getElementById('step-otp').classList.add('hidden');
+            document.getElementById('step-phone').classList.remove('hidden');
+        }
+
+        function verifyOTP() {
+            const otp = document.getElementById('inp-otp').value;
+            const phone = document.getElementById('inp-phone').value;
+            
+            // DEMO LOGIC: Hardcoded OTP and User Mapping
+            if (otp === '123456') {
+                let userData = {};
                 
-                // Show App, Hide Login
+                if (phone === '9876543210') {
+                    // Thendral Raj - ADMIN
+                    userData = { name: 'Thendral Raj', phone: phone, role: 'admin' };
+                } else if (phone === '9988776655') {
+                    // Yogesh - EMPLOYEE
+                    userData = { name: 'Sathis Yogesh', phone: phone, role: 'employee' };
+                } else {
+                    // New Employee
+                    userData = { name: `User ${phone.slice(-4)}`, phone: phone, role: 'employee' };
+                }
+
+                window.currentUser = userData;
+                setupUIForUser();
+                
                 document.getElementById('login-screen').classList.add('hidden');
                 document.getElementById('app-container').classList.remove('hidden');
                 document.getElementById('app-container').classList.add('flex');
                 
-                // Start Real-time Listener
                 if(db) startRealtimeListener();
-                else alert("Database not connected. Please check API Keys in code.");
             } else {
-                errorDiv.innerText = "Invalid Access Key. Contact Admin.";
-                errorDiv.classList.remove('hidden');
+                alert("Invalid OTP! Try 123456");
             }
-        });
+        }
+
+        function setupUIForUser() {
+            const user = window.currentUser;
+            document.getElementById('user-display-name').innerText = user.name;
+            document.getElementById('user-role').innerText = user.role === 'admin' ? 'Project Manager (Admin)' : 'Team Member';
+            document.getElementById('user-avatar').innerText = user.name.charAt(0);
+
+            // Admin gets Export button, Employee doesn't
+            if(user.role === 'admin') {
+                document.getElementById('btn-export').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-export').classList.add('hidden');
+            }
+        }
 
         window.logout = () => location.reload();
 
@@ -339,7 +354,7 @@
         // REAL-TIME DATABASE LISTENER
         // ---------------------------------------------------------
         function startRealtimeListener() {
-            const q = query(collection(db, "bugs"), orderBy("createdAt", "desc"));
+            const q = query(collection(db, "entries"), orderBy("createdAt", "desc"));
             
             onSnapshot(q, (snapshot) => {
                 window.bugsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
@@ -348,26 +363,26 @@
         }
 
         // ---------------------------------------------------------
-        // ADD BUG TO FIREBASE
+        // ADD ENTRY TO FIREBASE
         // ---------------------------------------------------------
-        document.getElementById('add-bug-form').addEventListener('submit', async (e) => {
+        document.getElementById('add-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             if(!db) return alert("DB Not Connected");
 
-            const newBug = {
+            const newEntry = {
                 title: document.getElementById('inp-title').value,
                 priority: document.getElementById('inp-priority').value,
-                assignee: document.getElementById('inp-assignee').value,
+                status: document.getElementById('inp-status').value,
                 description: document.getElementById('inp-desc').value,
-                status: 'Backlog',
                 createdAt: new Date().toISOString(),
-                createdBy: window.currentUser
+                createdBy: window.currentUser.name,
+                createdByPhone: window.currentUser.phone
             };
 
             try {
-                await addDoc(collection(db, "bugs"), newBug);
+                await addDoc(collection(db, "entries"), newEntry);
                 closeModal();
-                showToast("✅ Bug saved successfully to Cloud!");
+                showToast("✅ Saved successfully to Cloud!");
                 e.target.reset();
             } catch (err) {
                 alert("Failed to save: " + err.message);
@@ -380,7 +395,6 @@
         function renderAll() {
             renderStats();
             renderTable();
-            renderBoard();
             renderActivity();
         }
 
@@ -396,50 +410,34 @@
 
         function renderTable() {
             const tbody = document.getElementById('bug-table-body');
-            tbody.innerHTML = window.bugsData.map(bug => {
-                const priorityColor = bug.priority === 'Critical' ? 'text-rose-700 bg-rose-100' : 
-                                      bug.priority === 'High' ? 'text-orange-700 bg-orange-100' : 
-                                      bug.priority === 'Medium' ? 'text-blue-700 bg-blue-100' : 'text-slate-600 bg-slate-100';
+            const isAdmin = window.currentUser && window.currentUser.role === 'admin';
+
+            tbody.innerHTML = window.bugsData.map(entry => {
+                const priorityColor = entry.priority === 'Critical' ? 'text-rose-700 bg-rose-100' : 
+                                      entry.priority === 'High' ? 'text-orange-700 bg-orange-100' : 
+                                      entry.priority === 'Medium' ? 'text-blue-700 bg-blue-100' : 'text-slate-600 bg-slate-100';
                 
-                const statusColor = bug.status === 'Done' ? 'text-emerald-700 bg-emerald-100' : 'text-slate-600 bg-slate-100';
+                const statusColor = entry.status === 'Done' ? 'text-emerald-700 bg-emerald-100' : 'text-slate-600 bg-slate-100';
+
+                // DELETE BUTTON: ONLY FOR ADMIN
+                const deleteBtn = isAdmin ? 
+                    `<button onclick="deleteEntry('${entry.id}')" class="text-slate-300 hover:text-red-500 transition p-2 rounded hover:bg-red-50" title="Delete (Admin Only)"><i class="fa-solid fa-trash-can"></i></button>` : 
+                    `<span class="text-xs text-slate-300 italic p-2">Read Only</span>`;
 
                 return `
                     <tr class="hover:bg-slate-50 transition border-b border-slate-50 last:border-0">
-                        <td class="px-8 py-4 font-semibold text-slate-800">${bug.title}</td>
-                        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${priorityColor}">${bug.priority}</span></td>
-                        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${statusColor}">${bug.status}</span></td>
+                        <td class="px-8 py-4 font-semibold text-slate-800">${entry.title}</td>
+                        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${priorityColor}">${entry.priority}</span></td>
+                        <td class="px-6 py-4"><span class="px-3 py-1 rounded-full text-xs font-bold ${statusColor}">${entry.status}</span></td>
                         <td class="px-6 py-4 text-slate-600 flex items-center gap-2">
-                            <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">${bug.assignee.charAt(0)}</div>
-                            ${bug.assignee}
+                            <div class="w-6 h-6 rounded-full bg-slate-200 flex items-center justify-center text-[10px] font-bold text-slate-600">${entry.createdBy.charAt(0)}</div>
+                            ${entry.createdBy}
                         </td>
-                        <td class="px-6 py-4 text-xs text-slate-400 font-mono">${new Date(bug.createdAt).toLocaleDateString()}</td>
+                        <td class="px-6 py-4 text-xs text-slate-400 font-mono">${new Date(entry.createdAt).toLocaleDateString()}</td>
+                        <td class="px-6 py-4 text-right">${deleteBtn}</td>
                     </tr>
                 `;
             }).join('');
-        }
-
-        function renderBoard() {
-            const cols = { 'Backlog': [], 'In Progress': [], 'Review': [], 'Done': [] };
-            window.bugsData.forEach(b => { if(cols[b.status]) cols[b.status].push(b); });
-
-            Object.keys(cols).forEach(status => {
-                const container = document.getElementById(`col-${status.toLowerCase().replace(' ', '-')}`);
-                if(container) {
-                    container.innerHTML = cols[status].map(bug => `
-                        <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 cursor-pointer hover:shadow-md hover:border-blue-300 transition group relative">
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-500 uppercase tracking-wide">${bug.priority}</span>
-                                ${window.currentUser === 'Thendral Raj' ? `<button onclick="deleteBug('${bug.id}')" class="text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition"><i class="fa-solid fa-trash-can"></i></button>` : ''}
-                            </div>
-                            <h5 class="text-sm font-bold text-slate-800 mb-2 leading-snug">${bug.title}</h5>
-                            <div class="flex items-center justify-between mt-3 pt-3 border-t border-slate-50">
-                                <p class="text-[10px] text-slate-400 font-medium">Assigned: ${bug.assignee}</p>
-                                <p class="text-[10px] text-slate-300 font-mono">${new Date(bug.createdAt).toLocaleDateString()}</p>
-                            </div>
-                        </div>
-                    `).join('');
-                }
-            });
         }
 
         function renderActivity() {
@@ -451,16 +449,16 @@
                 return;
             }
 
-            list.innerHTML = recent.map(bug => `
+            list.innerHTML = recent.map(entry => `
                 <li class="px-8 py-4 flex items-center gap-4 hover:bg-slate-50 transition">
                     <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-sm font-bold border border-blue-100">
-                        ${bug.createdBy.charAt(0)}
+                        ${entry.createdBy.charAt(0)}
                     </div>
                     <div class="flex-1">
-                        <p class="text-sm font-bold text-slate-800">${bug.title}</p>
-                        <p class="text-xs text-slate-400 mt-0.5">Reported by <span class="text-slate-600 font-medium">${bug.createdBy}</span> • ${new Date(bug.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                        <p class="text-sm font-bold text-slate-800">${entry.title}</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Uploaded by <span class="text-slate-600 font-medium">${entry.createdBy}</span> • ${new Date(entry.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
                     </div>
-                    <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">${bug.status}</span>
+                    <span class="text-xs font-bold text-slate-600 bg-slate-100 px-3 py-1.5 rounded-lg border border-slate-200">${entry.status}</span>
                 </li>
             `).join('');
         }
@@ -468,12 +466,18 @@
         // ---------------------------------------------------------
         // UTILS & EXPORT
         // ---------------------------------------------------------
-        window.deleteBug = async (id) => {
-            if(confirm("Are you sure you want to permanently delete this bug?")) {
+        window.deleteEntry = async (id) => {
+            // Double check admin role before deleting
+            if(window.currentUser.role !== 'admin') return alert("Access Denied! Only Admin can delete.");
+            
+            if(confirm("⚠️ Are you sure? This will permanently delete this entry from Cloud.")) {
                 try {
-                    await deleteDoc(doc(db, "bugs", id));
-                    showToast("🗑️ Bug deleted from Cloud");
-                } catch(e) { console.error(e); }
+                    await deleteDoc(doc(db, "entries", id));
+                    showToast("🗑️ Entry deleted from Cloud");
+                } catch(e) { 
+                    console.error(e); 
+                    alert("Delete failed. Check Firestore Security Rules.");
+                }
             }
         };
 
@@ -481,18 +485,18 @@
             if(window.bugsData.length === 0) return alert("No data available to export.");
             
             const data = window.bugsData.map(b => ({
-                "Bug Title": b.title,
+                "Title": b.title,
                 "Priority": b.priority,
-                "Current Status": b.status,
-                "Assigned To": b.assignee,
-                "Reported By": b.createdBy,
-                "Date Created": new Date(b.createdAt).toLocaleDateString()
+                "Status": b.status,
+                "Uploaded By": b.createdBy,
+                "Phone": b.createdByPhone,
+                "Date": new Date(b.createdAt).toLocaleDateString()
             }));
 
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Bug_Report");
-            XLSX.writeFile(wb, `BugFlow_Enterprise_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
+            XLSX.utils.book_append_sheet(wb, ws, "Report");
+            XLSX.writeFile(wb, `BugFlow_Report_${new Date().toISOString().slice(0,10)}.xlsx`);
         };
 
         // UI Helpers
@@ -500,22 +504,20 @@
             document.querySelectorAll('.view').forEach(el => el.classList.add('hidden'));
             document.getElementById(`view-${viewName}`).classList.remove('hidden');
             
-            // Update Active Nav
             document.querySelectorAll('.nav-item').forEach(el => {
                 el.classList.remove('bg-slate-800', 'text-white');
                 el.classList.add('text-slate-400');
             });
-            // Simple logic to highlight current nav (optional improvement)
             
-            const titles = { 'dashboard': 'Dashboard Overview', 'bugs': 'All Reported Bugs', 'board': 'Kanban Workflow' };
+            const titles = { 'dashboard': 'Dashboard Overview', 'projects': 'All Projects & Entries' };
             document.getElementById('page-title').innerText = titles[viewName];
         };
 
         window.openModal = () => {
-            document.getElementById('bug-modal').classList.remove('hidden');
+            document.getElementById('entry-modal').classList.remove('hidden');
             document.getElementById('inp-title').focus();
         };
-        window.closeModal = () => document.getElementById('bug-modal').classList.add('hidden');
+        window.closeModal = () => document.getElementById('entry-modal').classList.add('hidden');
         
         function showToast(msg) {
             const div = document.createElement('div');
