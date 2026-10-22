@@ -14,7 +14,6 @@
 
     <style>
         body { font-family: 'Segoe UI', sans-serif; background-color: #f8fafc; }
-        .glass-panel { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
         .fade-in { animation: fadeIn 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
@@ -49,7 +48,7 @@
                         <input type="tel" id="inp-phone" value="9876543210" class="w-full pl-12 pr-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50" placeholder="Enter 10 digit number">
                     </div>
                 </div>
-                <button onclick="sendOTP()" class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg transition flex justify-center items-center gap-2">
+                <button id="btn-send-otp" class="w-full py-3.5 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg transition flex justify-center items-center gap-2">
                     <span>Send OTP</span>
                     <i class="fa-solid fa-paper-plane"></i>
                 </button>
@@ -62,11 +61,11 @@
                     <input type="text" id="inp-otp" class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 outline-none transition bg-slate-50 text-center tracking-[0.5em] font-mono text-xl" placeholder="------">
                     <p class="text-[10px] text-slate-400 mt-2 text-center">Demo OTP: <b>123456</b></p>
                 </div>
-                <button onclick="verifyOTP()" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-lg transition flex justify-center items-center gap-2">
+                <button id="btn-verify-otp" class="w-full py-3.5 px-4 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-lg shadow-lg transition flex justify-center items-center gap-2">
                     <span>Verify & Login</span>
                     <i class="fa-solid fa-check"></i>
                 </button>
-                <button onclick="backToPhone()" class="w-full py-2 text-xs text-slate-500 hover:text-blue-600">Change Number</button>
+                <button id="btn-back-phone" class="w-full py-2 text-xs text-slate-500 hover:text-blue-600">Change Number</button>
             </div>
             
             <div id="login-error" class="hidden mt-4 p-3 bg-red-50 text-red-600 text-xs rounded-lg text-center font-medium border border-red-100"></div>
@@ -105,7 +104,7 @@
                         <p id="user-role" class="text-[10px] text-slate-400">Employee</p>
                     </div>
                 </div>
-                <button onclick="logout()" class="w-full py-2 px-3 bg-slate-800 hover:bg-red-900/30 hover:text-red-400 text-slate-400 text-xs font-medium rounded-lg transition flex items-center justify-center gap-2 border border-slate-700 hover:border-red-800">
+                <button id="btn-logout" class="w-full py-2 px-3 bg-slate-800 hover:bg-red-900/30 hover:text-red-400 text-slate-400 text-xs font-medium rounded-lg transition flex items-center justify-center gap-2 border border-slate-700 hover:border-red-800">
                     <i class="fa-solid fa-power-off"></i> Logout Session
                 </button>
             </div>
@@ -121,12 +120,10 @@
                 </div>
                 
                 <div class="flex items-center gap-3">
-                    <!-- Admin Only Button -->
                     <button id="btn-export" onclick="exportToExcel()" class="hidden sm:flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg text-xs font-bold hover:bg-emerald-100 transition">
                         <i class="fa-solid fa-file-excel"></i> Export Report
                     </button>
                     
-                    <!-- Add Button (Visible to all, but logic differs) -->
                     <button id="btn-add" onclick="openModal()" class="flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 transition transform active:scale-95">
                         <i class="fa-solid fa-plus"></i> New Entry
                     </button>
@@ -209,7 +206,7 @@
         <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg p-0 m-4 animate-[fadeIn_0.2s_ease-out] border border-slate-200 overflow-hidden">
             <div class="bg-slate-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2"><i class="fa-solid fa-pen-to-square text-blue-600"></i> New Entry</h3>
-                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <button id="btn-close-modal" class="text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
             </div>
             
             <form id="add-form" class="p-6 space-y-5">
@@ -245,7 +242,7 @@
                 </div>
 
                 <div class="pt-2 flex gap-3">
-                    <button type="button" onclick="closeModal()" class="flex-1 py-3 border border-slate-300 text-slate-600 font-bold rounded-lg hover:bg-slate-50 transition">Cancel</button>
+                    <button type="button" id="btn-cancel-modal" class="flex-1 py-3 border border-slate-300 text-slate-600 font-bold rounded-lg hover:bg-slate-50 transition">Cancel</button>
                     <button type="submit" class="flex-1 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition flex justify-center items-center gap-2">
                         <i class="fa-solid fa-save"></i> Save to Cloud
                     </button>
@@ -282,27 +279,27 @@
 
         // Global State
         window.bugsData = [];
-        window.currentUser = null; // { name: "Thendral Raj", phone: "9876543210", role: "admin" }
+        window.currentUser = null; 
 
         // ---------------------------------------------------------
-        // AUTHENTICATION LOGIC (OTP SIMULATION)
+        // AUTHENTICATION LOGIC (FIXED EVENT LISTENERS)
         // ---------------------------------------------------------
-        function sendOTP() {
+        document.getElementById('btn-send-otp').addEventListener('click', () => {
             const phone = document.getElementById('inp-phone').value;
-            if(phone.length < 10) return alert("Please enter valid number");
+            if(phone.length < 10) return alert("Please enter valid 10 digit number");
             
             // In real app, call Firebase Auth signInWithPhoneNumber here
             document.getElementById('step-phone').classList.add('hidden');
             document.getElementById('step-otp').classList.remove('hidden');
             showToast(`📱 OTP sent to +91 ${phone}`);
-        }
+        });
 
-        function backToPhone() {
+        document.getElementById('btn-back-phone').addEventListener('click', () => {
             document.getElementById('step-otp').classList.add('hidden');
             document.getElementById('step-phone').classList.remove('hidden');
-        }
+        });
 
-        function verifyOTP() {
+        document.getElementById('btn-verify-otp').addEventListener('click', () => {
             const otp = document.getElementById('inp-otp').value;
             const phone = document.getElementById('inp-phone').value;
             
@@ -311,13 +308,10 @@
                 let userData = {};
                 
                 if (phone === '9876543210') {
-                    // Thendral Raj - ADMIN
                     userData = { name: 'Thendral Raj', phone: phone, role: 'admin' };
                 } else if (phone === '9988776655') {
-                    // Yogesh - EMPLOYEE
                     userData = { name: 'Sathis Yogesh', phone: phone, role: 'employee' };
                 } else {
-                    // New Employee
                     userData = { name: `User ${phone.slice(-4)}`, phone: phone, role: 'employee' };
                 }
 
@@ -332,7 +326,7 @@
             } else {
                 alert("Invalid OTP! Try 123456");
             }
-        }
+        });
 
         function setupUIForUser() {
             const user = window.currentUser;
@@ -340,7 +334,6 @@
             document.getElementById('user-role').innerText = user.role === 'admin' ? 'Project Manager (Admin)' : 'Team Member';
             document.getElementById('user-avatar').innerText = user.name.charAt(0);
 
-            // Admin gets Export button, Employee doesn't
             if(user.role === 'admin') {
                 document.getElementById('btn-export').classList.remove('hidden');
             } else {
@@ -348,7 +341,7 @@
             }
         }
 
-        window.logout = () => location.reload();
+        document.getElementById('btn-logout').addEventListener('click', () => location.reload());
 
         // ---------------------------------------------------------
         // REAL-TIME DATABASE LISTENER
@@ -419,7 +412,6 @@
                 
                 const statusColor = entry.status === 'Done' ? 'text-emerald-700 bg-emerald-100' : 'text-slate-600 bg-slate-100';
 
-                // DELETE BUTTON: ONLY FOR ADMIN
                 const deleteBtn = isAdmin ? 
                     `<button onclick="deleteEntry('${entry.id}')" class="text-slate-300 hover:text-red-500 transition p-2 rounded hover:bg-red-50" title="Delete (Admin Only)"><i class="fa-solid fa-trash-can"></i></button>` : 
                     `<span class="text-xs text-slate-300 italic p-2">Read Only</span>`;
@@ -467,13 +459,12 @@
         // UTILS & EXPORT
         // ---------------------------------------------------------
         window.deleteEntry = async (id) => {
-            // Double check admin role before deleting
             if(window.currentUser.role !== 'admin') return alert("Access Denied! Only Admin can delete.");
             
             if(confirm("⚠️ Are you sure? This will permanently delete this entry from Cloud.")) {
                 try {
                     await deleteDoc(doc(db, "entries", id));
-                    showToast("🗑️ Entry deleted from Cloud");
+                    showToast("️ Entry deleted from Cloud");
                 } catch(e) { 
                     console.error(e); 
                     alert("Delete failed. Check Firestore Security Rules.");
@@ -518,6 +509,10 @@
             document.getElementById('inp-title').focus();
         };
         window.closeModal = () => document.getElementById('entry-modal').classList.add('hidden');
+        
+        // Modal Event Listeners
+        document.getElementById('btn-close-modal').addEventListener('click', closeModal);
+        document.getElementById('btn-cancel-modal').addEventListener('click', closeModal);
         
         function showToast(msg) {
             const div = document.createElement('div');
